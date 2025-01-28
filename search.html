@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Portal</title>
+    <style>
+        /* Simple styling for the portal */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .search-container {
+            margin: 20px;
+            text-align: center;
+        }
+        .search-bar {
+            width: 60%;
+            padding: 10px;
+            font-size: 18px;
+        }
+        .video-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .video-item {
+            width: 300px;
+            margin: 10px;
+            text-align: center;
+        }
+        .video-item video {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-container">
+        <input type="text" id="searchBar" class="search-bar" onkeyup="searchVideos()" placeholder="Search for videos...">
+    </div>
+
+    <div class="video-list" id="videoList">
+        <div class="video-item" data-title="AI Technology">
+            <video controls>
+                <source src="ai_video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p>AI Technology</p>
+        </div>
+
+        <div class="video-item" data-title="Machine Learning">
+            <video controls>
+                <source src="ml_video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p>Machine Learning</p>
+        </div>
+
+        <div class="video-item" data-title="Health and AI">
+            <video controls>
+                <source src="health_ai_video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p>Health and AI</p>
+        </div>
+
+        <!-- Add more video items here -->
+    </div>
+
+    <script>
+        // JavaScript function to filter videos
+        function searchVideos() {
+            let input = document.getElementById('searchBar').value.toLowerCase();
+            let videoItems = document.querySelectorAll('.video-item');
+
+            videoItems.forEach(item => {
+                let title = item.getAttribute('data-title').toLowerCase();
+                if (title.includes(input)) {
+                    item.style.display = 'block'; // Show the video
+                } else {
+                    item.style.display = 'none';  // Hide the video
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
