@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Listening Tracker</title>
+    <style>
+        audio {
+            width: 100%;
+            height: auto;
+            border: 2px solid #000;
+            margin-top: 20px;
+        }
+        #status {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Audio Lecture Tracker</h1>
+
+<!-- Audio element -->
+<audio id="myAudio" controls>
+    <source src="sound.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<p>Click the button to get the exact length (duration) of the audio, in seconds.</p>
+<button onclick="getAudioDuration()">Get Audio Duration</button>
+
+<p id="duration-display">Duration: <span id="audio-duration">0</span> seconds</p>
+<p id="status">
+    Total Listened Time: <span id="time-spent">0</span> seconds
+</p>
+<p>Fast Forwarding: <span id="fast-forward-status">No</span></p>
+
+<script>
+    let listenedTime = 0; 
+    let startTime = 0; 
+    let previousTime = 0; 
+    let interval; 
+
+    
+    function getAudioDuration() {
+        const audio = document.getElementById("myAudio");
+        const duration = audio.duration;
+        document.getElementById("audio-duration").textContent = duration.toFixed(2);
+    }
+
+    
+    function updateListenedTime() {
+        if (startTime) {
+            listenedTime += Math.floor((Date.now() - startTime) / 1000);
+            document.getElementById("time-spent").textContent = listenedTime; // Update the time on screen
+            startTime = 0; 
+        }
+    }
+    document.getElementById("myAudio").addEventListener('play', () => {
+        startTime = Date.now(); 
+        previousTime = document.getElementById("myAudio").currentTime; 
+
+       
+        interval = setInterval(() => {
+            updateListenedTime();
+        }, 1000);
+    });
+
+    // Track audio pause event
+    document.getElementById("myAudio").addEventListener('pause', () => {
+        updateListenedTime(); 
+        if (listenedTime < 10) {
+            alert('Warning: You have listened to the audio for less than 10 seconds.');
+        }
+        clearInterval(interval);
+    });
+    document.getElementById("myAudio").addEventListener('timeupdate', () => {
+        const audio = document.getElementById("myAudio");
+        if (audio.currentTime - previousTime > 2) {
+            document.getElementById("fast-forward-status").textContent = 'Yes'; 
+        } else {
+            document.getElementById("fast-forward-status").textContent = 'No'; 
+        }
+        previousTime = audio.currentTime; 
+    });
+
+
+    document.getElementById("myAudio").addEventListener('ended', () => {
+        updateListenedTime(); 
+        clearInterval(interval); 
+    });
+</script>
+
+</body>
+</html>
