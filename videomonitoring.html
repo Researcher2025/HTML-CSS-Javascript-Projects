@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Watch Time Tracker</title>
+    <style>
+        video {
+            width: 100%;
+            height: auto;
+            border: 2px solid #000;
+        }
+        #status {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Lecture Tracker</h1>
+    <video id="video-lecture" controls>
+        <source src="animation.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <div id="status">
+        <p>Total Watched Time: <span id="time-spent">0</span> seconds</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('video-lecture');
+            const timeSpentDisplay = document.getElementById('time-spent');
+            let watchedTime = 0;
+            let startTime;
+
+            // Function to update watched time when video is paused or ended
+            const updateWatchedTime = () => {
+                if (startTime) {
+                    watchedTime += (Date.now() - startTime) / 1000;
+                    startTime = null; 
+                }
+            };
+
+            // Track video play and pause events
+            video.addEventListener('play', () => {
+                startTime = Date.now(); 
+            });
+
+            video.addEventListener('pause', () => {
+                updateWatchedTime(); 
+                timeSpentDisplay.textContent = Math.floor(watchedTime);
+                if (watchedTime < 300) {
+                    alert('Warning: You have watched the video for less than 5 minutes.');
+                }
+            });
+
+            video.addEventListener('ended', () => {
+                updateWatchedTime(); 
+                timeSpentDisplay.textContent = Math.floor(watchedTime); 
+            });
+            window.addEventListener('beforeunload', () => {
+                updateWatchedTime(); 
+                if (watchedTime < 300) { 
+                    alert('Warning: You have watched the video for less than 5 minutes.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
